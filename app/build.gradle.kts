@@ -63,6 +63,13 @@ android {
 		// Disables dependency metadata when building Android App Bundles (for Google Play)
 		includeInBundle = false
 	}
+
+	testOptions {
+		unitTests {
+			isIncludeAndroidResources = true
+			isReturnDefaultValues = true
+		}
+	}
 }
 
 room {
@@ -116,6 +123,8 @@ dependencies {
 	implementation(libs.bundles.koin)
 
 	testImplementation(libs.junit)
+	testImplementation("org.robolectric:robolectric:4.17")
+	testImplementation("androidx.test:core-ktx:1.6.1")
 	testImplementation(libs.androidx.truth)
 	testImplementation(libs.turbine)
 	testImplementation(libs.kotlinx.coroutines.test)
