@@ -42,7 +42,7 @@ class SettingsViewModel(
 				val playSound = settings.playSound.first() ?: false
 				val ringtoneUri = settings.soundUri.first()?.toUri()
 				val materialYou = settings.materialYou.first() ?: false
-				val voice = settings.voice.first() ?: false
+				val voice = settings.voice.first()
 				val theme = readThemeSetting()
 				val language = readLanguageSetting()
 				state.update { it.copy(

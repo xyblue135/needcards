@@ -4,6 +4,7 @@ import android.content.pm.ActivityInfo
 import android.provider.Settings
 import android.speech.tts.TextToSpeech
 import android.speech.tts.TextToSpeech.QUEUE_ADD
+import android.speech.tts.TextToSpeech.QUEUE_FLUSH
 import android.util.Log
 import androidx.activity.compose.LocalActivity
 import androidx.compose.animation.AnimatedContent
@@ -47,6 +48,7 @@ import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import kotlinx.coroutines.Dispatchers
+import java.util.Locale
 import vadimerenkov.aucards.R
 import vadimerenkov.aucards.data.CardLayout
 import vadimerenkov.aucards.screens.fullscreencard.layouts.DisplayText
@@ -86,10 +88,35 @@ fun SharedTransitionScope.CardFullscreen(
 			}
 		}
 	}
+	LaunchedEffect(isBound) {
+		if (isBound) {
+			// 系统 TTS 默认常挂着英文音色，中文会被念成逐字拼读；按当前语言矫正一次。
+			val locale = Locale.getDefault()
+			val target = if (locale.language == "zh") Locale.SIMPLIFIED_CHINESE else locale
+			val result = textToSpeech.setLanguage(target)
+			if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+				Log.w(TAG, "TTS language $target unavailable, using engine default")
+			}
+			textToSpeech.setSpeechRate(0.9f)
+		}
+	}
+
+	// 手动朗读：自动朗读关掉时也能点一下让它念出来，或者再念一遍。
+	fun speakCard() {
+		if (!isBound) {
+			Log.d(TAG, "TTS not bound yet, skip speaking")
+			return
+		}
+		textToSpeech.speak(state.aucard.text, QUEUE_FLUSH, null, "aucard_text")
+		// description 可以为空，部分引擎对 null 会抛异常
+		state.aucard.description?.takeIf { it.isNotBlank() }?.let {
+			textToSpeech.speak(it, QUEUE_ADD, null, "aucard_desc")
+		}
+	}
+
 	LaunchedEffect(isBound, viewModel.soundPlayer.isPlaying, state.isVoicingEnabled) {
 		if (isBound && !viewModel.soundPlayer.isPlaying && state.isVoicingEnabled) {
-			textToSpeech.speak(state.aucard.text, QUEUE_ADD, null, "")
-			textToSpeech.speak(state.aucard.description, QUEUE_ADD, null, "")
+			speakCard()
 		}
 	}
 
@@ -250,6 +277,18 @@ fun SharedTransitionScope.CardFullscreen(
 				)
 			}
 		}
+
+		// 左下角手动朗读，拇指够得到；点卡片本身是返回，所以需要一个独立的按钮。
+		ActionButton(
+			onClick = { speakCard() },
+			icon = painterResource(R.drawable.speaker),
+			contentDescription = stringResource(R.string.read_aloud),
+			iconSize = 72,
+			tint = contentColor,
+			modifier = Modifier
+				.align(Alignment.BottomStart)
+				.padding(vertical = 60.dp, horizontal = 30.dp)
+		)
 
 		if (state.isPlaySoundEnabled) {
 			AnimatedContent(

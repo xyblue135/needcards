@@ -38,6 +38,7 @@
     <string name="choose_ringtone">选择提示音</string>
     <string name="pause">暂停</string>
     <string name="play">播放</string>
+    <string name="read_aloud">朗读这张卡片</string>
     <string name="title_subtitle">标题 + 说明</string>
     <string name="two_halves">上下等分</string>
     <string name="text_size">字号</string>

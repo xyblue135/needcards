@@ -37,9 +37,10 @@ class Settings(
 		.map { settings ->
 			settings[booleanPreferencesKey(MATERIAL_STRING)]
 		}
+	// 这个分支面向「嘴里说不出话」的场景，首启默认朗读；用户可以在设置里关掉。
 	val voice = dataStore.data
 		.map { settings ->
-			settings[booleanPreferencesKey(VOICE_CARD)]
+			settings[booleanPreferencesKey(VOICE_CARD)] ?: true
 		}
 
 	suspend fun saveStringSettings(key: String, value: String) {

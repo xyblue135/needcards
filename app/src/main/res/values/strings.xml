@@ -51,6 +51,7 @@
     <string name="choose_ringtone">Choose a ringtone</string>
     <string name="pause">Pause</string>
     <string name="play">Play</string>
+    <string name="read_aloud">Read this card aloud</string>
     <string name="logo" translatable="false">logo:</string>
     <string name="designer" translatable="false">Olga Prilutskaia </string>
     <string name="title_subtitle">Title and description</string>
