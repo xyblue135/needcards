@@ -38,7 +38,8 @@ object PresetCards {
 		text.length <= 2 -> 88
 		text.length == 3 -> 76
 		text.length == 4 -> 66
-		else -> 54
+		text.length == 5 -> 56
+		else -> 46
 	}
 
 	private val presets: List<Preset> = listOf(
