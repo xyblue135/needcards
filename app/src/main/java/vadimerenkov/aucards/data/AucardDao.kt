@@ -30,6 +30,9 @@ interface AucardDao {
 	@Upsert
 	suspend fun saveCategory(category: CardCategory)
 
+	@Upsert
+	suspend fun saveAllCategories(categories: List<CardCategory>)
+
 	@Delete
 	suspend fun deleteCategory(category: CardCategory)
 

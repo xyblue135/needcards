@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="add_card">新建卡片</string>
+    <string name="save">保存</string>
+    <string name="empty_list_prompt">新建第一张卡片</string>
+    <string name="your_text">输入文字…</string>
+    <string name="description">补充说明…</string>
+    <string name="choose_color">选择颜色</string>
+    <string name="delete">删除卡片</string>
+    <string name="edit">编辑卡片</string>
+    <string name="open_settings">打开设置</string>
+    <string name="settings">设置</string>
+    <string name="go_back">返回</string>
+    <string name="light">浅色</string>
+    <string name="dark">深色</string>
+    <string name="device">跟随系统</string>
+    <string name="brightness">把亮度调到最大</string>
+    <string name="theme">主题</string>
+    <string name="language">语言</string>
+    <string name="source_code">源码：</string>
+    <string name="selected_number">已选 %s 张</string>
+    <string name="delete_button">删除</string>
+    <string name="cancel">取消</string>
+    <string name="translator">译者：</string>
+    <string name="landscape">切换为横屏</string>
+    <string name="all_cards">全部卡片</string>
+    <string name="favourites">收藏</string>
+    <string name="mark_as_favourite">加收藏</string>
+    <string name="add_to_fav_prompt">把常用卡片加入收藏，就会出现在这里</string>
+    <string name="brightness_permission">该选项需要授予修改系统设置的权限。</string>
+    <string name="palette">调色板</string>
+    <string name="custom_color">自定义</string>
+    <string name="import_cards">从文件导入卡片</string>
+    <string name="export">导出卡片到文件</string>
+    <string name="settings_play_sound">播放提示音</string>
+    <string name="play_sound_description">先响一声，让别人注意到你要说话。</string>
+    <string name="ringtone">提示音：</string>
+    <string name="choose_ringtone">选择提示音</string>
+    <string name="pause">暂停</string>
+    <string name="play">播放</string>
+    <string name="title_subtitle">标题 + 说明</string>
+    <string name="two_halves">上下等分</string>
+    <string name="text_size">字号</string>
+    <string name="layout">布局</string>
+    <string name="change_image">换图片</string>
+    <string name="remove_image">移除图片</string>
+    <string name="opacity">文字底色不透明度：</string>
+    <string name="choose_image">选择图片</string>
+    <string name="export_error">导出失败，错误码：%d</string>
+    <string name="import_error">导入失败，错误码：%d</string>
+    <string name="image_error">图片保存失败，错误码：%d</string>
+    <string name="copy_selected">复制所选卡片</string>
+    <string name="support">支持开发者：</string>
+    <string name="choose_card">选择卡片：</string>
+    <string name="when_opening_the_card">打开卡片时：</string>
+    <string name="title_activity_widget_configure" translatable="false">WidgetConfigureActivity</string>
+    <string name="open_menu">打开菜单</string>
+    <string name="choose_categories">选择分类</string>
+    <string name="new_category">新建分类</string>
+    <string name="all">全部</string>
+    <string name="category_name">分类名称</string>
+    <string name="rename">重命名</string>
+    <string name="delete_category">删除</string>
+    <string name="delete_category_confirmation">确定删除分类「%s」？分类里的卡片不会被删除。</string>
+    <string name="categories">分类</string>
+    <string name="no_cards_in_category">「%s」里还没有卡片。</string>
+    <string name="play_tts">用系统语音朗读卡片文字</string>
+
+    <plurals name="import_success">
+        <item quantity="other">成功导入 %d 张卡片</item>
+    </plurals>
+    <plurals name="export_success">
+        <item quantity="other">成功导出 %d 张卡片</item>
+    </plurals>
+    <plurals name="number_deleted">
+        <item quantity="other">已删除 %d 张卡片</item>
+    </plurals>
+    <plurals name="delete_confirmation">
+        <item quantity="other">确定删除 %s 张卡片？</item>
+    </plurals>
+</resources>

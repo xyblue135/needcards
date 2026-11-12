@@ -11,11 +11,11 @@ android {
 	compileSdk = 37
 
 	defaultConfig {
-		applicationId = "vadimerenkov.aucards"
+		applicationId = "icu.xyblue135.needcards"
 		minSdk = 26
 		targetSdk = 37
-		versionCode = 24
-		versionName = "2.6.4"
+		versionCode = 25
+		versionName = "2.6.4-needcards"
 
 		testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 	}
@@ -24,11 +24,21 @@ android {
 		generateLocaleConfig = true
 	}
 
+	signingConfigs {
+		create("selfSigned") {
+			storeFile = File(System.getProperty("user.home"), ".android/debug.keystore")
+			storePassword = "android"
+			keyAlias = "androiddebugkey"
+			keyPassword = "android"
+		}
+	}
+
 	buildTypes {
 		debug {
 			isMinifyEnabled = false
 		}
 		release {
+			signingConfig = signingConfigs.getByName("selfSigned")
 			isMinifyEnabled = true
 			isShrinkResources = true
 			proguardFiles(
