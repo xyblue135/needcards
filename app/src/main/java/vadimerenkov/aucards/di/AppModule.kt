@@ -20,6 +20,8 @@ import vadimerenkov.aucards.dataStore
 import vadimerenkov.aucards.screens.fullscreencard.CardViewModel
 import vadimerenkov.aucards.screens.list.ListViewModel
 import vadimerenkov.aucards.screens.quickspeak.QuickSpeakViewModel
+import vadimerenkov.aucards.data.RecentPhrases
+import vadimerenkov.aucards.screens.say.SayViewModel
 import vadimerenkov.aucards.screens.recovery.RecoveryViewModel
 import vadimerenkov.aucards.screens.settings.SQLiteImporter
 import vadimerenkov.aucards.screens.settings.Settings
@@ -34,6 +36,7 @@ val appModule = module {
 	factory { ExoPlayer.Builder(androidContext()).build() }
 	factory { DefaultDispatchers() }.bind<DispatchersProvider>()
 
+	singleOf(::RecentPhrases)
 	singleOf(::Settings)
 	singleOf(::SQLiteImporter)
 
@@ -42,4 +45,5 @@ val appModule = module {
 	viewModelOf(::CardViewModel)
 	viewModelOf(::QuickSpeakViewModel)
 	viewModelOf(::RecoveryViewModel)
+	viewModelOf(::SayViewModel)
 }

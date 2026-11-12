@@ -1,5 +1,12 @@
 package vadimerenkov.aucards.screens.say
 
+import org.koin.androidx.compose.koinViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.material3.AssistChip
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.LazyRow
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -46,9 +53,11 @@ import vadimerenkov.aucards.data.QuickSpeak
 @Composable
 fun SayScreen(
 	onSpeak: (String) -> Unit,
-	modifier: Modifier = Modifier
+	modifier: Modifier = Modifier,
+	viewModel: SayViewModel = koinViewModel()
 ) {
 	var text by rememberSaveable { mutableStateOf("") }
+	val recent by viewModel.recent.collectAsStateWithLifecycle()
 	val focusRequester = remember { FocusRequester() }
 	val keyboard = LocalSoftwareKeyboardController.current
 	val canSend = QuickSpeak.isSendable(text)
@@ -58,6 +67,7 @@ fun SayScreen(
 		val sentence = QuickSpeak.clean(text)
 		text = ""
 		keyboard?.hide()
+		viewModel.remember(sentence)
 		onSpeak(sentence)
 	}
 
@@ -88,6 +98,32 @@ fun SayScreen(
 			if (text.isNotEmpty()) {
 				TextButton(onClick = { text = "" }) {
 					Text(text = stringResource(R.string.clear))
+				}
+			}
+		}
+
+		// 一天里翻来覆去就那几句，点一下直接念，不用重打
+		if (recent.isNotEmpty()) {
+			Text(
+				text = stringResource(R.string.recent_phrases),
+				style = MaterialTheme.typography.labelMedium,
+				color = MaterialTheme.colorScheme.onSurfaceVariant
+			)
+			LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+				items(recent, key = { it }) { sentence ->
+					AssistChip(
+						onClick = {
+							viewModel.remember(sentence)
+							onSpeak(sentence)
+						},
+						label = {
+							Text(
+								text = sentence,
+								maxLines = 1,
+								overflow = TextOverflow.Ellipsis
+							)
+						}
+					)
 				}
 			}
 		}
