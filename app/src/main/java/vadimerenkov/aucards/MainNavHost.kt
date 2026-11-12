@@ -24,6 +24,7 @@ import org.koin.core.parameter.parametersOf
 import vadimerenkov.aucards.screens.fullscreencard.CardFullscreen
 import vadimerenkov.aucards.screens.fullscreencard.EditScreen
 import vadimerenkov.aucards.screens.list.ListScreen
+import vadimerenkov.aucards.screens.quickspeak.QuickSpeakScreen
 import vadimerenkov.aucards.screens.settings.SettingsScreen
 import vadimerenkov.aucards.ui.ObserveAsEvents
 import vadimerenkov.aucards.ui.SnackbarController
@@ -39,6 +40,11 @@ data object SettingsScreen
 @Serializable
 data class FullscreenCard(
 	val id: Int
+)
+
+@Serializable
+data class QuickSpeak(
+	val text: String
 )
 
 @Serializable
@@ -78,6 +84,7 @@ fun MainNavHost(
 					onAddButtonClicked = { navController.navigate(EditScreen(0, index = it)) },
 					onCardEditClicked = { navController.navigate(EditScreen(it)) },
 					onSettingsClicked = { navController.navigate(SettingsScreen) },
+					onQuickSpeak = { navController.navigate(QuickSpeak(it)) },
 					animatedVisibilityScope = this,
 					sharedTransitionScope = this@SharedTransitionLayout,
 					isWideScreen = isWideScreen,
@@ -98,6 +105,13 @@ fun MainNavHost(
 					) },
 					onBackClicked = { navController.navigateUp() },
 					scope = this,
+				)
+			}
+			composable<QuickSpeak> { entry ->
+				val route = entry.toRoute<QuickSpeak>()
+				QuickSpeakScreen(
+					viewModel = koinViewModel { parametersOf(route.text) },
+					onClose = { navController.navigateUp() }
 				)
 			}
 			composable<EditScreen> {

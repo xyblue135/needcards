@@ -52,6 +52,9 @@
     <string name="pause">Pause</string>
     <string name="play">Play</string>
     <string name="read_aloud">Read this card aloud</string>
+    <string name="quick_speak_hint">Type what you want to say…</string>
+    <string name="quick_speak_send">Say it</string>
+    <string name="save_as_card">Save as card</string>
     <string name="logo" translatable="false">logo:</string>
     <string name="designer" translatable="false">Olga Prilutskaia </string>
     <string name="title_subtitle">Title and description</string>

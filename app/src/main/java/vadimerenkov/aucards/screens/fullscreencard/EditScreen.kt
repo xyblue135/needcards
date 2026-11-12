@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.absoluteOffset
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -268,6 +269,8 @@ fun SharedTransitionScope.EditScreen(
 			onBackClicked = onBackClicked,
 			isWideScreen = isWideScreen,
 			modifier = Modifier
+				// 键盘弹起时把工具栏顶上来，否则保存 ✓ 会被挡住，必须先收键盘才能存
+				.imePadding()
 				.align(Alignment.BottomCenter)
 				.alpha(if (state.isEditingImage) 0.6f else 1f)
 		)

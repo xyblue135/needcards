@@ -9,12 +9,16 @@ import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.displayCutoutPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.isImeVisible
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
@@ -77,6 +81,7 @@ import vadimerenkov.aucards.ui.applyIf
 
 private const val TAG = "ListScreen"
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun ListScreen(
 	viewModel: ListViewModel,
@@ -84,6 +89,7 @@ fun ListScreen(
 	onCardEditClicked: (Int) -> Unit,
 	onAddButtonClicked: (Int) -> Unit,
 	onSettingsClicked: () -> Unit,
+	onQuickSpeak: (String) -> Unit,
 	animatedVisibilityScope: AnimatedVisibilityScope,
 	sharedTransitionScope: SharedTransitionScope,
 	isWideScreen: Boolean,
@@ -403,45 +409,51 @@ fun ListScreen(
 					SnackbarHost(snackbar)
 				},
 				bottomBar = {
-					if (!isWideScreen) {
-						NavigationBar(
-							containerColor = MaterialTheme.colorScheme.primaryContainer,
-							contentColor = MaterialTheme.colorScheme.onPrimaryContainer
-						) {
-							NavigationBarItem(
-								selected = listState.currentPage == 0,
-								onClick = { viewModel.turnPage(0) },
-								icon = {
-									Icon(
-										painter = painterResource(R.drawable.grid),
-										contentDescription = null
+					Column(
+						modifier = Modifier.imePadding()
+					) {
+						QuickSpeakBar(onSend = onQuickSpeak)
+						// 键盘弹起时只留输入条，底部导航让位给键盘
+						if (!isWideScreen && !WindowInsets.isImeVisible) {
+							NavigationBar(
+								containerColor = MaterialTheme.colorScheme.primaryContainer,
+								contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+							) {
+								NavigationBarItem(
+									selected = listState.currentPage == 0,
+									onClick = { viewModel.turnPage(0) },
+									icon = {
+										Icon(
+											painter = painterResource(R.drawable.grid),
+											contentDescription = null
+										)
+									},
+									label = {
+										Text(text = stringResource(R.string.all_cards))
+									},
+									colors = NavigationBarItemDefaults.colors(
+										indicatorColor = MaterialTheme.colorScheme.onPrimaryContainer,
+										selectedIconColor = MaterialTheme.colorScheme.onPrimary
 									)
-								},
-								label = {
-									Text(text = stringResource(R.string.all_cards))
-								},
-								colors = NavigationBarItemDefaults.colors(
-									indicatorColor = MaterialTheme.colorScheme.onPrimaryContainer,
-									selectedIconColor = MaterialTheme.colorScheme.onPrimary
 								)
-							)
-							NavigationBarItem(
-								selected = listState.currentPage == 1,
-								onClick = { viewModel.turnPage(1) },
-								icon = {
-									Icon(
-										imageVector = Icons.Default.Favorite,
-										contentDescription = null
+								NavigationBarItem(
+									selected = listState.currentPage == 1,
+									onClick = { viewModel.turnPage(1) },
+									icon = {
+										Icon(
+											imageVector = Icons.Default.Favorite,
+											contentDescription = null
+										)
+									},
+									label = {
+										Text(text = stringResource(R.string.favourites))
+									},
+									colors = NavigationBarItemDefaults.colors(
+										indicatorColor = MaterialTheme.colorScheme.onPrimaryContainer,
+										selectedIconColor = MaterialTheme.colorScheme.onPrimary
 									)
-								},
-								label = {
-									Text(text = stringResource(R.string.favourites))
-								},
-								colors = NavigationBarItemDefaults.colors(
-									indicatorColor = MaterialTheme.colorScheme.onPrimaryContainer,
-									selectedIconColor = MaterialTheme.colorScheme.onPrimary
 								)
-							)
+							}
 						}
 					}
 				},
