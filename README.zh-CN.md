@@ -34,6 +34,7 @@
 - 这一屏不落库，退出就没了；想留就点右下角「存为卡片」
 - 左下角喇叭可以再念一遍
 - 「刚说过」一行留着最近 5 句，点一下直接重念，不用重复打字
+- 右上角「手写板」：全屏白底黑字，用手指写完举给对方看；可以撤销、清空，写字时不会自动锁屏
 
 ## 拔牙恢复
 
@@ -109,7 +110,7 @@ export ANDROID_HOME=/path/to/Android/Sdk
 ## 测试
 
 ```bash
-./gradlew :app:testDebugUnitTest    # 61 用例
+./gradlew :app:testDebugUnitTest    # 70 用例
 ```
 
 - `PresetCardsTest` — 预置数据自洽（分类 id、数量、索引、字号、收藏）
@@ -119,6 +120,7 @@ export ANDROID_HOME=/path/to/Android/Sdk
 - `PageNavTest` — 底部切页：相邻滑动、跨页瞬移
 - `ColdPackTimerTest` — 敷/停 20 分钟交替、倒计时边界、时间格式
 - `RecentPhrasesTest` — 最近说过：去重提前、上限截断、存读往返
+- `DrawPadTest` — 手写板：落笔/追加点/抬笔入库/撤销/清空
 - `ListViewModelTest` — 上游原有
 
 ## 许可

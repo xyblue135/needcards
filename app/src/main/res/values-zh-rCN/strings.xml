@@ -33,6 +33,10 @@
     <string name="voice_check_no_engine">语音引擎没启动。去系统设置里检查「文字转语音」，并装一个中文语音包。</string>
     <string name="common_phrases">常用语</string>
     <string name="say_something">说一句</string>
+    <string name="handwriting">手写板</string>
+    <string name="undo">撤销</string>
+    <string name="done">完成</string>
+    <string name="ink_pad_hint">用手指在这里写，写完把屏幕给对方看。</string>
     <string name="recent_phrases">刚说过</string>
     <string name="say_hint">打完点下面「说出来」，会全屏显示并朗读。</string>
     <string name="filter_all">全部</string>

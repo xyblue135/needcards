@@ -22,6 +22,7 @@ import kotlinx.serialization.Serializable
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import vadimerenkov.aucards.screens.fullscreencard.CardFullscreen
+import vadimerenkov.aucards.screens.draw.InkPadScreen
 import vadimerenkov.aucards.screens.fullscreencard.EditScreen
 import vadimerenkov.aucards.screens.list.ListScreen
 import vadimerenkov.aucards.screens.quickspeak.QuickSpeakScreen
@@ -46,6 +47,9 @@ data class FullscreenCard(
 data class QuickSpeak(
 	val text: String
 )
+
+@Serializable
+data object InkPad
 
 @Serializable
 data class EditScreen(
@@ -85,6 +89,7 @@ fun MainNavHost(
 					onCardEditClicked = { navController.navigate(EditScreen(it)) },
 					onSettingsClicked = { navController.navigate(SettingsScreen) },
 					onQuickSpeak = { navController.navigate(QuickSpeak(it)) },
+					onOpenInkPad = { navController.navigate(InkPad) },
 					animatedVisibilityScope = this,
 					sharedTransitionScope = this@SharedTransitionLayout,
 					isWideScreen = isWideScreen,
@@ -113,6 +118,9 @@ fun MainNavHost(
 					viewModel = koinViewModel { parametersOf(route.text) },
 					onClose = { navController.navigateUp() }
 				)
+			}
+			composable<InkPad> {
+				InkPadScreen(onClose = { navController.navigateUp() })
 			}
 			composable<EditScreen> {
 				val route = it.toRoute<EditScreen>()

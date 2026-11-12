@@ -53,6 +53,7 @@ import vadimerenkov.aucards.data.QuickSpeak
 @Composable
 fun SayScreen(
 	onSpeak: (String) -> Unit,
+	onOpenInkPad: () -> Unit,
 	modifier: Modifier = Modifier,
 	viewModel: SayViewModel = koinViewModel()
 ) {
@@ -95,6 +96,14 @@ fun SayScreen(
 				color = MaterialTheme.colorScheme.onSurfaceVariant,
 				modifier = Modifier.weight(1f)
 			)
+			TextButton(
+				onClick = {
+					keyboard?.hide()
+					onOpenInkPad()
+				}
+			) {
+				Text(text = stringResource(R.string.handwriting))
+			}
 			if (text.isNotEmpty()) {
 				TextButton(onClick = { text = "" }) {
 					Text(text = stringResource(R.string.clear))

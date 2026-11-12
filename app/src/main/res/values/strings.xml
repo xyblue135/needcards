@@ -46,6 +46,10 @@
     <string name="voice_check_no_engine">The speech engine did not start. Check the system text-to-speech settings and install a Chinese voice.</string>
     <string name="common_phrases">Common phrases</string>
     <string name="say_something">Say something</string>
+    <string name="handwriting">Handwriting</string>
+    <string name="undo">Undo</string>
+    <string name="done">Done</string>
+    <string name="ink_pad_hint">Write here with your finger, then show the screen to whoever you are talking to.</string>
     <string name="recent_phrases">Recently said</string>
     <string name="say_hint">Type it, then tap the button below — it shows full screen and is read aloud.</string>
     <string name="filter_all">All</string>

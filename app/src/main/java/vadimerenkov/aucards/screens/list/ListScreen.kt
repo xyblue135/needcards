@@ -96,6 +96,7 @@ fun ListScreen(
 	onAddButtonClicked: (Int) -> Unit,
 	onSettingsClicked: () -> Unit,
 	onQuickSpeak: (String) -> Unit,
+	onOpenInkPad: () -> Unit,
 	animatedVisibilityScope: AnimatedVisibilityScope,
 	sharedTransitionScope: SharedTransitionScope,
 	isWideScreen: Boolean,
@@ -682,7 +683,10 @@ fun ListScreen(
 							}
 						}
 						// 第二页：临时说一句
-						1 -> SayScreen(onSpeak = onQuickSpeak)
+						1 -> SayScreen(
+							onSpeak = onQuickSpeak,
+							onOpenInkPad = onOpenInkPad
+						)
 						// 第三页：拔牙恢复
 						else -> RecoveryScreen(
 							viewModel = recoveryViewModel,
