@@ -82,6 +82,7 @@ import vadimerenkov.aucards.ui.ContentType
 import vadimerenkov.aucards.ui.SharedContentStateKey
 import vadimerenkov.aucards.ui.Target
 import vadimerenkov.aucards.ui.applyIf
+import vadimerenkov.aucards.ui.shouldJumpPage
 
 private const val TAG = "ListScreen"
 
@@ -239,6 +240,26 @@ fun ListScreen(
 	val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 	val scope = rememberCoroutineScope()
 
+	// 分页状态提在这里，让导航栏直接驱动 pager，而不是把 currentPage 写回 ViewModel 后再
+	// 由 LaunchedEffect 反过来滚 pager。后者会在 0 → 2 的动画路过第 1 页时把 1 写回去，
+	// 于是 ScrollToPage 的目标被改掉，停在收藏页（表现为要点两次）。
+	val pagerState = rememberPagerState(initialPage = listState.currentPage) { 3 }
+
+	// 跨页直接跳，相邻页滑动：既避免滑动经过中间页的视觉错觉，也少一次中间态回写
+	val goToPage: (Int) -> Unit = { page ->
+		scope.launch {
+			if (shouldJumpPage(pagerState.currentPage, page)) {
+				pagerState.scrollToPage(page)
+			} else {
+				pagerState.animateScrollToPage(page)
+			}
+		}
+	}
+
+	LaunchedEffect(pagerState.currentPage) {
+		viewModel.turnPage(pagerState.currentPage)
+	}
+
 	ModalNavigationDrawer(
 		drawerState = drawerState,
 		drawerContent = {
@@ -309,7 +330,7 @@ fun ListScreen(
 				)
 				NavigationRailItem(
 					selected = listState.currentPage == 0,
-					onClick = { viewModel.turnPage(0) },
+					onClick = { goToPage(0) },
 					icon = {
 						Icon(
 							painterResource(R.drawable.grid),
@@ -332,7 +353,7 @@ fun ListScreen(
 				)
 				NavigationRailItem(
 					selected = listState.currentPage == 1,
-					onClick = { viewModel.turnPage(1) },
+					onClick = { goToPage(1) },
 					icon = {
 						Icon(
 							imageVector = Icons.Outlined.Star,
@@ -355,7 +376,7 @@ fun ListScreen(
 				)
 				NavigationRailItem(
 					selected = listState.currentPage == 2,
-					onClick = { viewModel.turnPage(2) },
+					onClick = { goToPage(2) },
 					icon = {
 						Icon(
 							imageVector = Icons.Default.DateRange,
@@ -450,7 +471,7 @@ fun ListScreen(
 							) {
 								NavigationBarItem(
 									selected = listState.currentPage == 0,
-									onClick = { viewModel.turnPage(0) },
+									onClick = { goToPage(0) },
 									icon = {
 										Icon(
 											painter = painterResource(R.drawable.grid),
@@ -467,7 +488,7 @@ fun ListScreen(
 								)
 								NavigationBarItem(
 									selected = listState.currentPage == 1,
-									onClick = { viewModel.turnPage(1) },
+									onClick = { goToPage(1) },
 									icon = {
 										Icon(
 											imageVector = Icons.Default.Favorite,
@@ -484,7 +505,7 @@ fun ListScreen(
 								)
 								NavigationBarItem(
 									selected = listState.currentPage == 2,
-									onClick = { viewModel.turnPage(2) },
+									onClick = { goToPage(2) },
 									icon = {
 										Icon(
 											imageVector = Icons.Default.DateRange,
@@ -541,20 +562,8 @@ fun ListScreen(
 				}
 			) { innerPadding ->
 
-				val pager_state = rememberPagerState(
-					initialPage = listState.currentPage
-				) { 3 }
-
-				LaunchedEffect(listState.currentPage) {
-					pager_state.animateScrollToPage(listState.currentPage)
-				}
-
-				LaunchedEffect(pager_state.currentPage) {
-					viewModel.turnPage(pager_state.currentPage)
-				}
-
 				HorizontalPager(
-					state = pager_state,
+					state = pagerState,
 					modifier = modifier
 						.fillMaxSize()
 						.padding(innerPadding),
