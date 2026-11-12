@@ -384,6 +384,8 @@ fun SettingsScreen(
 									viewModel.saveVoiceSetting(it)
 								}
 							)
+							HorizontalDivider()
+							VoiceCheck()
 						}
 						if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
 							HorizontalDivider()

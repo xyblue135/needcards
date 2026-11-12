@@ -24,6 +24,13 @@
     <string name="translator">译者：</string>
     <string name="landscape">切换为横屏</string>
     <string name="new_group_hint">分组名，例如「疼的时候」</string>
+    <string name="voice_check_title">朗读自检</string>
+    <string name="voice_check_play">试听一句</string>
+    <string name="voice_check_sentence">这是朗读测试。能听到这句话，说明朗读是正常的。</string>
+    <string name="voice_check_hint">朗读走的是媒体音量，不是铃声或通知音量。</string>
+    <string name="voice_check_volume_zero">媒体音量为 0，点了也不会出声。</string>
+    <string name="voice_check_open_sound">打开声音设置</string>
+    <string name="voice_check_no_engine">语音引擎没启动。去系统设置里检查「文字转语音」，并装一个中文语音包。</string>
     <string name="common_phrases">常用语</string>
     <string name="say_something">说一句</string>
     <string name="say_hint">打完点下面「说出来」，会全屏显示并朗读。</string>

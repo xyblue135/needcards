@@ -37,6 +37,13 @@
     <string name="translator">Translator: %your name%</string>
     <string name="landscape">Switch to landscape mode</string>
     <string name="new_group_hint">Group name, e.g. Pain</string>
+    <string name="voice_check_title">Read-aloud check</string>
+    <string name="voice_check_play">Try it</string>
+    <string name="voice_check_sentence">This is a read-aloud test. If you can hear this sentence, the voice works.</string>
+    <string name="voice_check_hint">Read-aloud uses the media volume, not the ringtone or notification volume.</string>
+    <string name="voice_check_volume_zero">Media volume is 0, so read-aloud will stay silent.</string>
+    <string name="voice_check_open_sound">Sound settings</string>
+    <string name="voice_check_no_engine">The speech engine did not start. Check the system text-to-speech settings and install a Chinese voice.</string>
     <string name="common_phrases">Common phrases</string>
     <string name="say_something">Say something</string>
     <string name="say_hint">Type it, then tap the button below — it shows full screen and is read aloud.</string>

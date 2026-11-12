@@ -14,8 +14,8 @@ android {
 		applicationId = "icu.xyblue135.needcards"
 		minSdk = 26
 		targetSdk = 37
-		versionCode = 28
-		versionName = "2.8.0"
+		versionCode = 29
+		versionName = "2.8.1"
 
 		testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 	}
