@@ -108,4 +108,14 @@ class PresetSeederTest {
 
 		assertThat(texts).isEqualTo(PresetCards.buildCards().map { it.text })
 	}
+
+	@Test
+	fun `收藏标记能正确落库`() = runBlocking {
+		PresetSeeder.seedOnce(db.aucardDao(), dataStore)
+
+		val favourites = db.aucardDao().getFavouriteCards().first()
+
+		assertThat(favourites).hasSize(8)
+		assertThat(favourites.map { it.text }).contains("我说不了话")
+	}
 }

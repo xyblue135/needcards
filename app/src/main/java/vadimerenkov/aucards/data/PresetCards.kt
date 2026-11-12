@@ -31,7 +31,8 @@ object PresetCards {
 		val text: String,
 		val description: String?,
 		val color: Color,
-		val categories: List<Int>
+		val categories: List<Int>,
+		val favourite: Boolean = false
 	)
 
 	private fun sizeFor(text: String): Int = when {
@@ -44,12 +45,12 @@ object PresetCards {
 
 	private val presets: List<Preset> = listOf(
 		// 1 先说一句
-		Preset("我说不了话", "刚拔了智齿，嘴张不开，看我打字", purple, listOf(1)),
+		Preset("我说不了话", "刚拔了智齿，嘴张不开，看我打字", purple, listOf(1), favourite = true),
 		Preset("我听得见", "只是说不出声，打字给你看", purple, listOf(1)),
 		Preset("请等一下", "我打出来给你看", purple, listOf(1)),
 
 		// 2 疼与求助
-		Preset("很疼", "疼得厉害", red, listOf(2)),
+		Preset("很疼", "疼得厉害", red, listOf(2), favourite = true),
 		Preset("疼得受不了", "能不能加止痛药", red, listOf(2, 3)),
 		Preset("这边肿了", "你看看正常吗", red, listOf(2, 3)),
 		Preset("还在出血", "止不住", red, listOf(2, 3)),
@@ -58,7 +59,7 @@ object PresetCards {
 		Preset("好多了", "不用担心", red, listOf(2)),
 
 		// 3 医护
-		Preset("帮我叫医生", null, amber, listOf(3)),
+		Preset("帮我叫医生", null, amber, listOf(3), favourite = true),
 		Preset("帮我叫护士", null, amber, listOf(3)),
 		Preset("我对药过敏", null, amber, listOf(3)),
 		Preset("什么时候复诊", null, amber, listOf(3)),
@@ -67,10 +68,10 @@ object PresetCards {
 		Preset("冰敷多久一次", null, amber, listOf(3)),
 
 		// 4 日常需求
-		Preset("想喝水", "温的", blue, listOf(4)),
+		Preset("想喝水", "温的", blue, listOf(4), favourite = true),
 		Preset("想吃东西", "软的就行", blue, listOf(4)),
-		Preset("给我冰袋", null, blue, listOf(4)),
-		Preset("帮我拿药", null, blue, listOf(4)),
+		Preset("给我冰袋", null, blue, listOf(4), favourite = true),
+		Preset("帮我拿药", null, blue, listOf(4), favourite = true),
 		Preset("扶我一下", null, blue, listOf(4)),
 		Preset("我想躺下", null, blue, listOf(4)),
 		Preset("关一下灯", "太亮了", blue, listOf(4)),
@@ -78,8 +79,8 @@ object PresetCards {
 		Preset("帮我拿纸笔", null, blue, listOf(4)),
 
 		// 5 客套
-		Preset("谢谢", null, green, listOf(5)),
-		Preset("等一下", null, green, listOf(5)),
+		Preset("谢谢", null, green, listOf(5), favourite = true),
+		Preset("等一下", null, green, listOf(5), favourite = true),
 		Preset("不用了，谢谢", null, green, listOf(5)),
 		Preset("我没事", "过两天就好", green, listOf(5)),
 
@@ -96,6 +97,7 @@ object PresetCards {
 			description = preset.description,
 			color = preset.color,
 			categories = preset.categories,
+			isFavourite = preset.favourite,
 			titleFontSize = sizeFor(preset.text),
 			descriptionFontSize = 28,
 			index = index

@@ -69,4 +69,13 @@ class PresetCardsTest {
 			assertThat(count).isGreaterThan(0)
 		}
 	}
+
+	@Test
+	fun `预置了开箱可用的收藏`() {
+		val favourites = PresetCards.buildCards().filter { it.isFavourite }
+
+		// 一屏放得下，且必须包含开场白
+		assertThat(favourites).hasSize(8)
+		assertThat(favourites.map { it.text }).contains("我说不了话")
+	}
 }
