@@ -48,6 +48,10 @@
 | 第 8-14 天 | 基本恢复 | 饮食慢慢放开，吃完漱口 |
 | 第 15 天以后 | 长肉期 | 牙槽窝 1-3 个月才填平，别去抠 |
 
+另有一张「冷敷 / 热敷计时」卡：敷 20 分钟、停 20 分钟交替，到点响一声。
+前 48 小时显示冷敷，第 3 天起自动换成热敷。应用被系统杀掉就不会响，所以卡里
+留了「用系统计时器」的入口。
+
 页面下半部可以点开任意阶段看完整清单。另有一张红色卡片列了需要马上联系医生的情况
 （出血不止、第 4 天后反而加重、发烧、吞咽困难、干槽症异味）。
 
@@ -104,7 +108,7 @@ export ANDROID_HOME=/path/to/Android/Sdk
 ## 测试
 
 ```bash
-./gradlew :app:testDebugUnitTest    # 47 用例
+./gradlew :app:testDebugUnitTest    # 54 用例
 ```
 
 - `PresetCardsTest` — 预置数据自洽（分类 id、数量、索引、字号、收藏）
@@ -112,6 +116,7 @@ export ANDROID_HOME=/path/to/Android/Sdk
 - `RecoveryTimelineTest` — 术后天数换算、阶段边界连续不重叠、任意天数都能落段
 - `CardFilterTest` — 全部 / 收藏 / 分组三种筛选，含空分组与优先级
 - `PageNavTest` — 底部切页：相邻滑动、跨页瞬移
+- `ColdPackTimerTest` — 敷/停 20 分钟交替、倒计时边界、时间格式
 - `ListViewModelTest` — 上游原有
 
 ## 许可

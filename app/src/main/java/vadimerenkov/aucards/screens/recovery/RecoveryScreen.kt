@@ -103,6 +103,13 @@ fun RecoveryScreen(
 			}
 		}
 
+		// 前 48 小时冰敷，之后改热敷；没有日期就不猜
+		uiState.dayNumber?.let { day ->
+			item {
+				ColdPackCard(isCold = day <= 2)
+			}
+		}
+
 		item {
 			WarningCard()
 		}
