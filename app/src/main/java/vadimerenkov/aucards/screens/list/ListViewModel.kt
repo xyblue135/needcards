@@ -140,6 +140,19 @@ class ListViewModel(
 		) }
 	}
 
+	/** 常用语页「+」直接建分组，不用先开抽屉再输入 */
+	fun createCategory(name: String) {
+		val trimmed = name.trim()
+		if (trimmed.isEmpty()) return
+		val category = CardCategory(
+			name = trimmed,
+			index = listState.value.categories.size + 1
+		)
+		viewModelScope.launch {
+			aucardDao.saveCategory(category)
+		}
+	}
+
 	suspend fun saveCategories(categories: List<CardCategory>) {
 		categories.forEach {
 			aucardDao.saveCategory(it)
@@ -148,7 +161,13 @@ class ListViewModel(
 	}
 
 	fun selectCategory(category: CardCategory?) {
-		list_state.update { it.copy(selectedCategory = category) }
+		// 「全部」和「收藏」都挂在分类筛选上，切换时先退出收藏视图
+		list_state.update { it.copy(selectedCategory = category, onlyFavourites = false) }
+	}
+
+	/** 常用语页的「收藏」筛选：只换筛选条件，卡片本身不受影响 */
+	fun selectFavourites() {
+		list_state.update { it.copy(onlyFavourites = true, selectedCategory = null) }
 	}
 
 	fun deleteCategory(category: CardCategory) {
@@ -182,6 +201,7 @@ data class ListState(
 	val favouritesList: List<Aucard> = emptyList(),
 	val categories: List<CardCategory> = emptyList(),
 	val selectedCategory: CardCategory? = null,
+	val onlyFavourites: Boolean = false,
 	val newCategoryName: String = "",
 	val currentPage: Int,
 	val isLoading: Boolean = true,

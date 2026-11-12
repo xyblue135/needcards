@@ -36,6 +36,13 @@
     <string name="cancel">Cancel</string>
     <string name="translator">Translator: %your name%</string>
     <string name="landscape">Switch to landscape mode</string>
+    <string name="new_group_hint">Group name, e.g. Pain</string>
+    <string name="common_phrases">Common phrases</string>
+    <string name="say_something">Say something</string>
+    <string name="say_hint">Type it, then tap the button below — it shows full screen and is read aloud.</string>
+    <string name="filter_all">All</string>
+    <string name="clear">Clear</string>
+    <string name="recovery_title">Recovery</string>
     <string name="all_cards">All cards</string>
     <string name="favourites">Favourites</string>
     <string name="mark_as_favourite">Mark as favourite</string>

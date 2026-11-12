@@ -239,7 +239,7 @@ fun CategoriesDrawer(
 			onClick = {
 				onCategoryClick(null)
 			},
-			selected = listState.selectedCategory == null
+			selected = listState.selectedCategory == null && !listState.onlyFavourites
 		)
 		val lazyListState = rememberLazyListState()
 		var categories by remember { mutableStateOf(listState.categories) }

@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.displayCutoutPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.isImeVisible
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
@@ -26,12 +25,11 @@ import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
@@ -47,6 +45,7 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.NavigationRail
 import androidx.compose.material3.NavigationRailItem
 import androidx.compose.material3.NavigationRailItemDefaults
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -76,8 +75,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 import vadimerenkov.aucards.R
+import vadimerenkov.aucards.data.filterPhrases
 import vadimerenkov.aucards.screens.recovery.RecoveryScreen
 import vadimerenkov.aucards.screens.recovery.RecoveryViewModel
+import vadimerenkov.aucards.screens.say.SayScreen
 import vadimerenkov.aucards.ui.ContentType
 import vadimerenkov.aucards.ui.SharedContentStateKey
 import vadimerenkov.aucards.ui.Target
@@ -108,6 +109,8 @@ fun ListScreen(
 	var deleteConfirmationOpen by remember { mutableStateOf(false) }
 	var chooseCategoriesDialogOpen by remember { mutableStateOf(false) }
 	var newCategoryDialogOpen by remember { mutableStateOf(false) }
+	var newGroupDialogOpen by remember { mutableStateOf(false) }
+	var newGroupName by remember { mutableStateOf("") }
 
 	// Set screen orientation back to user-specified.
 	val activity = LocalActivity.current
@@ -150,6 +153,46 @@ fun ListScreen(
 					shape = MaterialTheme.shapes.medium
 				) {
 					Text(stringResource(R.string.delete_button))
+				}
+			},
+			shape = MaterialTheme.shapes.medium
+		)
+	}
+
+	if (newGroupDialogOpen) {
+		AlertDialog(
+			onDismissRequest = { newGroupDialogOpen = false },
+			title = {
+				Text(text = stringResource(R.string.new_category))
+			},
+			text = {
+				OutlinedTextField(
+					value = newGroupName,
+					onValueChange = { newGroupName = it.take(24) },
+					singleLine = true,
+					placeholder = {
+						Text(text = stringResource(R.string.new_group_hint))
+					},
+					modifier = Modifier.fillMaxWidth()
+				)
+			},
+			dismissButton = {
+				TextButton(
+					onClick = { newGroupDialogOpen = false }
+				) {
+					Text(stringResource(R.string.cancel))
+				}
+			},
+			confirmButton = {
+				Button(
+					onClick = {
+						viewModel.createCategory(newGroupName)
+						newGroupDialogOpen = false
+					},
+					enabled = newGroupName.isNotBlank(),
+					shape = MaterialTheme.shapes.medium
+				) {
+					Text(stringResource(R.string.save))
 				}
 			},
 			shape = MaterialTheme.shapes.medium
@@ -339,7 +382,7 @@ fun ListScreen(
 					},
 					label = {
 						Text(
-							text = stringResource(R.string.all_cards),
+							text = stringResource(R.string.common_phrases),
 							modifier = Modifier
 								.padding(horizontal = 8.dp)
 						)
@@ -356,13 +399,13 @@ fun ListScreen(
 					onClick = { goToPage(1) },
 					icon = {
 						Icon(
-							imageVector = Icons.Outlined.Star,
+							imageVector = Icons.AutoMirrored.Filled.Send,
 							contentDescription = null
 						)
 					},
 					label = {
 						Text(
-							text = stringResource(R.string.favourites),
+							text = stringResource(R.string.say_something),
 							modifier = Modifier
 								.padding(horizontal = 8.dp)
 						)
@@ -385,7 +428,7 @@ fun ListScreen(
 					},
 					label = {
 						Text(
-							text = "拔牙恢复",
+							text = stringResource(R.string.recovery_title),
 							modifier = Modifier
 								.padding(horizontal = 8.dp)
 						)
@@ -451,7 +494,7 @@ fun ListScreen(
 						isEditEnabled = listState.selectedList.size == 1,
 						isDeleteEnabled = listState.selectedList.isNotEmpty(),
 						currentPage = listState.currentPage,
-						isShowingSettingsButton = !isWideScreen,
+						isShowingSettingsButton = !isWideScreen && listState.currentPage == 0,
 						titleText = listState.selectedCategory?.name
 					)
 				},
@@ -459,73 +502,69 @@ fun ListScreen(
 					SnackbarHost(snackbar)
 				},
 				bottomBar = {
-					Column(
-						modifier = Modifier.imePadding()
-					) {
-						QuickSpeakBar(onSend = onQuickSpeak)
-						// 键盘弹起时只留输入条，底部导航让位给键盘
-						if (!isWideScreen && !WindowInsets.isImeVisible) {
-							NavigationBar(
-								containerColor = MaterialTheme.colorScheme.primaryContainer,
-								contentColor = MaterialTheme.colorScheme.onPrimaryContainer
-							) {
-								NavigationBarItem(
-									selected = listState.currentPage == 0,
-									onClick = { goToPage(0) },
-									icon = {
-										Icon(
-											painter = painterResource(R.drawable.grid),
-											contentDescription = null
-										)
-									},
-									label = {
-										Text(text = stringResource(R.string.all_cards))
-									},
-									colors = NavigationBarItemDefaults.colors(
-										indicatorColor = MaterialTheme.colorScheme.onPrimaryContainer,
-										selectedIconColor = MaterialTheme.colorScheme.onPrimary
+					// 键盘弹起时把底部让给键盘，免得挡住「说一句」的输入和发送按钮
+					if (!isWideScreen && !WindowInsets.isImeVisible) {
+						NavigationBar(
+							containerColor = MaterialTheme.colorScheme.primaryContainer,
+							contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+						) {
+							NavigationBarItem(
+								selected = listState.currentPage == 0,
+								onClick = { goToPage(0) },
+								icon = {
+									Icon(
+										painter = painterResource(R.drawable.grid),
+										contentDescription = null
 									)
+								},
+								label = {
+									Text(text = stringResource(R.string.common_phrases))
+								},
+								colors = NavigationBarItemDefaults.colors(
+									indicatorColor = MaterialTheme.colorScheme.onPrimaryContainer,
+									selectedIconColor = MaterialTheme.colorScheme.onPrimary
 								)
-								NavigationBarItem(
-									selected = listState.currentPage == 1,
-									onClick = { goToPage(1) },
-									icon = {
-										Icon(
-											imageVector = Icons.Default.Favorite,
-											contentDescription = null
-										)
-									},
-									label = {
-										Text(text = stringResource(R.string.favourites))
-									},
-									colors = NavigationBarItemDefaults.colors(
-										indicatorColor = MaterialTheme.colorScheme.onPrimaryContainer,
-										selectedIconColor = MaterialTheme.colorScheme.onPrimary
+							)
+							NavigationBarItem(
+								selected = listState.currentPage == 1,
+								onClick = { goToPage(1) },
+								icon = {
+									Icon(
+										imageVector = Icons.AutoMirrored.Filled.Send,
+										contentDescription = null
 									)
+								},
+								label = {
+									Text(text = stringResource(R.string.say_something))
+								},
+								colors = NavigationBarItemDefaults.colors(
+									indicatorColor = MaterialTheme.colorScheme.onPrimaryContainer,
+									selectedIconColor = MaterialTheme.colorScheme.onPrimary
 								)
-								NavigationBarItem(
-									selected = listState.currentPage == 2,
-									onClick = { goToPage(2) },
-									icon = {
-										Icon(
-											imageVector = Icons.Default.DateRange,
-											contentDescription = null
-										)
-									},
-									label = {
-										Text(text = "拔牙恢复")
-									},
-									colors = NavigationBarItemDefaults.colors(
-										indicatorColor = MaterialTheme.colorScheme.onPrimaryContainer,
-										selectedIconColor = MaterialTheme.colorScheme.onPrimary
+							)
+							NavigationBarItem(
+								selected = listState.currentPage == 2,
+								onClick = { goToPage(2) },
+								icon = {
+									Icon(
+										imageVector = Icons.Default.DateRange,
+										contentDescription = null
 									)
+								},
+								label = {
+									Text(text = stringResource(R.string.recovery_title))
+								},
+								colors = NavigationBarItemDefaults.colors(
+									indicatorColor = MaterialTheme.colorScheme.onPrimaryContainer,
+									selectedIconColor = MaterialTheme.colorScheme.onPrimary
 								)
-							}
+							)
 						}
 					}
 				},
 				floatingActionButton = {
-					if (listState.currentPage != 2) with(sharedTransitionScope) {
+					// 只有「常用语」页需要新建卡片
+					if (listState.currentPage == 0) with(sharedTransitionScope) {
 						val contentState = rememberSharedContentState(
 							SharedContentStateKey(
 								0,
@@ -568,74 +607,87 @@ fun ListScreen(
 						.fillMaxSize()
 						.padding(innerPadding),
 				) { page ->
-					if (page == 2) {
-						RecoveryScreen(
-							viewModel = recoveryViewModel,
-							modifier = Modifier.fillMaxSize()
-						)
-					} else {
-					AnimatedContent(targetState = listState.isLoading) {loading ->
-						when {
-							loading -> {
-								CircularProgressIndicator(
-									modifier = Modifier
-										.fillMaxSize()
-										.wrapContentSize()
-								)
+					when (page) {
+						// 第一页：常用语（分组 chip + 卡片网格）
+						0 -> {
+							val category = listState.selectedCategory
+							val isFiltered = listState.onlyFavourites || category != null
+							val visibleCards = filterPhrases(
+								cards = listState.list,
+								favouritesOnly = listState.onlyFavourites,
+								categoryId = category?.id
+							)
+							val emptyPrompt = when {
+								listState.onlyFavourites -> stringResource(R.string.add_to_fav_prompt)
+								category != null -> stringResource(R.string.no_cards_in_category, category.name)
+								else -> stringResource(R.string.empty_list_prompt)
 							}
-							else -> {
-								val lazyGridState = rememberLazyGridState()
-								GridOfCards(
-									items = if (page == 0) {
-										if (listState.selectedCategory == null) {
-											listState.list
-										} else {
-											listState.list.filter { it.categories.contains(listState.selectedCategory!!.id) }
-										}
-									} else {
-										listState.favouritesList
-									},
-									selectedList = listState.selectedList,
-									sharedTransitionScope = sharedTransitionScope,
-									animatedVisibilityScope = animatedVisibilityScope,
-									onCardClick = onCardClicked,
-									onFavourited = {
-										viewModel.markAsFavourite(it)
-									},
-									onLongPress = {
-										viewModel.enterSelectMode(it)
-									},
-									isSelectMode = listState.isSelectMode,
-									onSelect = { id ->
-										viewModel.selectId(id)
-									},
-									onDeselect = { id ->
-										viewModel.deselectId(id)
-									},
-									onDragStopped = { cards ->
-										viewModel.saveAllCards(cards)
-									},
-									lazyGridState = lazyGridState
+							Column(modifier = Modifier.fillMaxSize()) {
+								GroupChips(
+									categories = listState.categories,
+									favouritesOnly = listState.onlyFavourites,
+									selectedCategory = category,
+									onSelectAll = { viewModel.selectCategory(null) },
+									onSelectFavourites = { viewModel.selectFavourites() },
+									onSelectCategory = { viewModel.selectCategory(it) },
+									onAddGroup = {
+										newGroupName = ""
+										newGroupDialogOpen = true
+									}
 								)
-								if (page == 0 && listState.list.isEmpty()) {
-									PromptText(
-										text = stringResource(R.string.empty_list_prompt)
-									)
-								} else if (listState.selectedCategory != null
-									&& listState.list.count { it.categories.contains(listState.selectedCategory!!.id) } == 0
-									) {
-									PromptText(
-										text = stringResource(R.string.no_cards_in_category, listState.selectedCategory!!.name)
-									)
-								}
-								if (page == 1 && listState.favouritesList.isEmpty()) {
-									PromptText(
-										text = stringResource(R.string.add_to_fav_prompt)
-									)
+								AnimatedContent(
+									targetState = listState.isLoading,
+									modifier = Modifier.weight(1f)
+								) { loading ->
+									if (loading) {
+										CircularProgressIndicator(
+											modifier = Modifier
+												.fillMaxSize()
+												.wrapContentSize()
+										)
+									} else {
+										Box(modifier = Modifier.fillMaxSize()) {
+											GridOfCards(
+												items = visibleCards,
+												selectedList = listState.selectedList,
+												sharedTransitionScope = sharedTransitionScope,
+												animatedVisibilityScope = animatedVisibilityScope,
+												onCardClick = onCardClicked,
+												onFavourited = {
+													viewModel.markAsFavourite(it)
+												},
+												onLongPress = {
+													viewModel.enterSelectMode(it)
+												},
+												isSelectMode = listState.isSelectMode,
+												onSelect = { id ->
+													viewModel.selectId(id)
+												},
+												onDeselect = { id ->
+													viewModel.deselectId(id)
+												},
+												onDragStopped = { cards ->
+													// 分组/收藏视图里拖动只会在子集内部改 index，
+													// 会打乱全量顺序，所以只让「全部」那张能排
+													if (!isFiltered) viewModel.saveAllCards(cards)
+												},
+												lazyGridState = rememberLazyGridState()
+											)
+											if (visibleCards.isEmpty()) {
+												PromptText(text = emptyPrompt)
+											}
+										}
+									}
 								}
 							}
 						}
-					}
+						// 第二页：临时说一句
+						1 -> SayScreen(onSpeak = onQuickSpeak)
+						// 第三页：拔牙恢复
+						else -> RecoveryScreen(
+							viewModel = recoveryViewModel,
+							modifier = Modifier.fillMaxSize()
+						)
 					}
 				}
 			}

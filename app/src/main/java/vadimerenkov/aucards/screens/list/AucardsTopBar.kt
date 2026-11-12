@@ -81,21 +81,21 @@ fun AucardsTopBar(
 					when (currentPage) {
 						0 -> {
 							Text(
-								text = titleText ?: stringResource(R.string.app_name),
+								text = titleText ?: stringResource(R.string.common_phrases),
 								color = MaterialTheme.colorScheme.onPrimaryContainer
 							)
 						}
 
 						1 -> {
 							Text(
-								stringResource(R.string.favourites),
+								stringResource(R.string.say_something),
 								color = MaterialTheme.colorScheme.onPrimaryContainer
 							)
 						}
 
 						2 -> {
 							Text(
-								text = "拔牙恢复",
+								text = stringResource(R.string.recovery_title),
 								color = MaterialTheme.colorScheme.onPrimaryContainer
 							)
 						}

@@ -23,6 +23,13 @@
     <string name="cancel">取消</string>
     <string name="translator">译者：</string>
     <string name="landscape">切换为横屏</string>
+    <string name="new_group_hint">分组名，例如「疼的时候」</string>
+    <string name="common_phrases">常用语</string>
+    <string name="say_something">说一句</string>
+    <string name="say_hint">打完点下面「说出来」，会全屏显示并朗读。</string>
+    <string name="filter_all">全部</string>
+    <string name="clear">清空</string>
+    <string name="recovery_title">拔牙恢复</string>
     <string name="all_cards">全部卡片</string>
     <string name="favourites">收藏</string>
     <string name="mark_as_favourite">加收藏</string>
