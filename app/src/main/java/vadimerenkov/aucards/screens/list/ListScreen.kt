@@ -27,6 +27,7 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Settings
@@ -73,7 +74,10 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.launch
+import org.koin.androidx.compose.koinViewModel
 import vadimerenkov.aucards.R
+import vadimerenkov.aucards.screens.recovery.RecoveryScreen
+import vadimerenkov.aucards.screens.recovery.RecoveryViewModel
 import vadimerenkov.aucards.ui.ContentType
 import vadimerenkov.aucards.ui.SharedContentStateKey
 import vadimerenkov.aucards.ui.Target
@@ -97,6 +101,8 @@ fun ListScreen(
 	modifier: Modifier = Modifier
 ) {
 	val listState by viewModel.listState.collectAsStateWithLifecycle()
+	// 恢复页只订阅一个 DataStore，跟着列表页一起建开销可以忽略
+	val recoveryViewModel: RecoveryViewModel = koinViewModel()
 	val context = LocalContext.current
 	var deleteConfirmationOpen by remember { mutableStateOf(false) }
 	var chooseCategoriesDialogOpen by remember { mutableStateOf(false) }
@@ -347,6 +353,29 @@ fun ListScreen(
 					modifier = Modifier
 						.displayCutoutPadding()
 				)
+				NavigationRailItem(
+					selected = listState.currentPage == 2,
+					onClick = { viewModel.turnPage(2) },
+					icon = {
+						Icon(
+							imageVector = Icons.Default.DateRange,
+							contentDescription = null
+						)
+					},
+					label = {
+						Text(
+							text = "拔牙恢复",
+							modifier = Modifier
+								.padding(horizontal = 8.dp)
+						)
+					},
+					colors = NavigationRailItemDefaults.colors(
+						indicatorColor = MaterialTheme.colorScheme.onPrimaryContainer,
+						selectedIconColor = MaterialTheme.colorScheme.onPrimary
+					),
+					modifier = Modifier
+						.displayCutoutPadding()
+				)
 				Spacer(modifier = Modifier.weight(1f))
 				NavigationRailItem(
 					selected = false,
@@ -453,12 +482,29 @@ fun ListScreen(
 										selectedIconColor = MaterialTheme.colorScheme.onPrimary
 									)
 								)
+								NavigationBarItem(
+									selected = listState.currentPage == 2,
+									onClick = { viewModel.turnPage(2) },
+									icon = {
+										Icon(
+											imageVector = Icons.Default.DateRange,
+											contentDescription = null
+										)
+									},
+									label = {
+										Text(text = "拔牙恢复")
+									},
+									colors = NavigationBarItemDefaults.colors(
+										indicatorColor = MaterialTheme.colorScheme.onPrimaryContainer,
+										selectedIconColor = MaterialTheme.colorScheme.onPrimary
+									)
+								)
 							}
 						}
 					}
 				},
 				floatingActionButton = {
-					with(sharedTransitionScope) {
+					if (listState.currentPage != 2) with(sharedTransitionScope) {
 						val contentState = rememberSharedContentState(
 							SharedContentStateKey(
 								0,
@@ -497,7 +543,7 @@ fun ListScreen(
 
 				val pager_state = rememberPagerState(
 					initialPage = listState.currentPage
-				) { 2 }
+				) { 3 }
 
 				LaunchedEffect(listState.currentPage) {
 					pager_state.animateScrollToPage(listState.currentPage)
@@ -513,6 +559,12 @@ fun ListScreen(
 						.fillMaxSize()
 						.padding(innerPadding),
 				) { page ->
+					if (page == 2) {
+						RecoveryScreen(
+							viewModel = recoveryViewModel,
+							modifier = Modifier.fillMaxSize()
+						)
+					} else {
 					AnimatedContent(targetState = listState.isLoading) {loading ->
 						when {
 							loading -> {
@@ -574,6 +626,7 @@ fun ListScreen(
 								}
 							}
 						}
+					}
 					}
 				}
 			}

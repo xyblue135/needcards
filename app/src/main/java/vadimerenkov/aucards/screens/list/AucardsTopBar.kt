@@ -92,6 +92,13 @@ fun AucardsTopBar(
 								color = MaterialTheme.colorScheme.onPrimaryContainer
 							)
 						}
+
+						2 -> {
+							Text(
+								text = "拔牙恢复",
+								color = MaterialTheme.colorScheme.onPrimaryContainer
+							)
+						}
 					}
 
 				}

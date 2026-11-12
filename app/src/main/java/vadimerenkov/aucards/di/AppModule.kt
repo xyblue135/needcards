@@ -20,6 +20,7 @@ import vadimerenkov.aucards.dataStore
 import vadimerenkov.aucards.screens.fullscreencard.CardViewModel
 import vadimerenkov.aucards.screens.list.ListViewModel
 import vadimerenkov.aucards.screens.quickspeak.QuickSpeakViewModel
+import vadimerenkov.aucards.screens.recovery.RecoveryViewModel
 import vadimerenkov.aucards.screens.settings.SQLiteImporter
 import vadimerenkov.aucards.screens.settings.Settings
 import vadimerenkov.aucards.screens.settings.SettingsViewModel
@@ -40,4 +41,5 @@ val appModule = module {
 	viewModelOf(::SettingsViewModel)
 	viewModelOf(::CardViewModel)
 	viewModelOf(::QuickSpeakViewModel)
+	viewModelOf(::RecoveryViewModel)
 }

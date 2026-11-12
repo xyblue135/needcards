@@ -43,6 +43,12 @@ class Settings(
 			settings[booleanPreferencesKey(VOICE_CARD)] ?: true
 		}
 
+	// 拔牙日期，ISO 格式（2026-11-12）。没设过就是 null。
+	val extractionDate = dataStore.data
+		.map { settings ->
+			settings[stringPreferencesKey(EXTRACTION_DATE)]
+		}
+
 	suspend fun saveStringSettings(key: String, value: String) {
 		val key = stringPreferencesKey(key)
 		dataStore.edit { settings ->
