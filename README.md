@@ -4,6 +4,10 @@
 
 </div>
 
+> **这是 [NeedCards](README.zh-CN.md)，Aucards 的中文预设分支。**
+> 内置 34 张中文卡片、简体中文界面，包名 `icu.xyblue135.needcards`，可与原版共存。
+> 中文说明见 [README.zh-CN.md](README.zh-CN.md)。下方为上游原始文档。
+
 Aucards is a free and open-source app where you can create colorful communication cards to help you communicate with others.
 
 App is based on the concept of "communication cards", which people with special needs use to quickly communicate their feelings, their requests or inform others of their conditions.
